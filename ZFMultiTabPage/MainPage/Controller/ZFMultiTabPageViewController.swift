@@ -70,6 +70,12 @@ class ZFMultiTabPageViewController: UIViewController {
     // 页面的高度偏移量
     private var offsetHeight: CGFloat = 0
     
+    /// 初始化方法
+    /// - Parameters:
+    ///   - tabCount: tab数量
+    ///   - headerView: 头部视图
+    ///   - tabView: tab视图
+    ///   - titleBarHeight: titleBar的高度
     init(tabCount: Int, headerView: UIView, tabView: UIView, titleBarHeight: CGFloat) {
         super.init(nibName: nil, bundle: nil)
         self.tabCount = tabCount
@@ -78,6 +84,16 @@ class ZFMultiTabPageViewController: UIViewController {
         self.titleBarHeight = titleBarHeight
     }
     
+    
+    /// 初始化方法
+    /// - Parameters:
+    ///   - tabCount: tab数量
+    ///   - headerView: 头部视图
+    ///   - tabView: tab视图
+    ///   - titleBarHeight: titleBar的高度
+    ///   - defaultIndex: 可选参数，默认显示的子tab的索引，默认显示第一个
+    ///   - isHiddenHeaderView: 可选参数，是否隐藏头部视图，默认显示
+    ///   - offsetHeight: 可选参数，主视图的偏移量，默认 = 0
     init(tabCount: Int, headerView: UIView, tabView: UIView, titleBarHeight: CGFloat, defaultIndex: Int = 0, isHiddenHeaderView: Bool = false, offsetHeight: CGFloat = 0) {
         super.init(nibName: nil, bundle: nil)
         self.tabCount = tabCount

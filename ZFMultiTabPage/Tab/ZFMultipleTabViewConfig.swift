@@ -38,15 +38,15 @@ class ZFMultipleTabViewConfig: NSObject {
     var titleColor: UIColor = UIColor.black
     /** 选中状态下标题按钮文字的颜色，默认为红色 */
     var titleSelectedColor: UIColor = UIColor.red
-    /** 指示器颜色，默认为红色 */
+    /** 追踪器颜色，默认为红色 */
     var indicatorColor: UIColor = UIColor.red
-    /** 指示器高度，默认为 3.0f */
+    /** 追踪器高度，默认为 3.0f */
     var indicatorHeight: CGFloat = 3.0
-    /** 指示器宽度比，默认为 1.0f，与title同宽 */
+    /** 追踪器宽度比，默认为 1.0f，与title同宽 */
     var indicatorWidthRate: CGFloat = 1.0
-    /** 指示器的圆角，默认为 2.0f */
+    /** 追踪器的圆角，默认为 2.0f */
     var indicatorCorner: CGFloat = 2.0
-    /** 指示器距离底部的距离，默认为 5.0f */
+    /** 追踪器距离底部的距离，默认为 5.0f */
     var indicatorBottomDistance: CGFloat = 5.0
     
 }

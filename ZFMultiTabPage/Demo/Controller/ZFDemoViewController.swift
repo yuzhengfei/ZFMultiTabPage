@@ -33,7 +33,7 @@ class ZFDemoViewController: UIViewController {
         return tabView
     }()
     
-    // 悬浮控制器
+    // 多tab控制器
     private lazy var multiTabPageVC: ZFMultiTabPageViewController = {
         let multiTabPageVC = ZFMultiTabPageViewController(tabCount: 3, headerView: headerView, tabView: tabView, titleBarHeight: Constants.titleBarHeight)
         multiTabPageVC.delegate = self

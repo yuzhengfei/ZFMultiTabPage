@@ -288,6 +288,8 @@ class ZFMultipleTabView: UIView {
 // MARK: - Public Methos 对外提供的方法
 extension ZFMultipleTabView {
     
+    /// 视图滑动时调用
+    /// - Parameter pager: 滑动的子view
     public func pagerDidScroll(pager: UIScrollView) {
         let offsetX = pager.contentOffset.x
         let pageWidth = pager.bounds.size.width
@@ -296,12 +298,16 @@ extension ZFMultipleTabView {
         adjustTabButtonFont(pagerOffsetX: offsetX, pageWidth: pageWidth)
     }
     
+    /// 视图滑动开始减速调用
+    /// - Parameter pager: 滑动的子view
     public func pagerDidEndDecelerating(pager: UIScrollView) {
         let offsetX = pager.contentOffset.x
         let pageWidth = pager.bounds.size.width
         adjustButtonAtScrollEnd(offsetX: offsetX, pageWidth: pageWidth)
     }
     
+    /// 视图动画完成后调用
+    /// - Parameter pager: 滑动的子view
     public func pagerDidEndScrollingAnimation(pager: UIScrollView) {
         let offsetX = pager.contentOffset.x
         let pageWidth = pager.bounds.size.width
