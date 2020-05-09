@@ -23,7 +23,8 @@ class ZFCollectionDemoViewController: ZFMultiTabChildPageViewController {
         layout.sectionInset = UIEdgeInsets.init(top: 10, left: 10, bottom: 10, right: 10)
         layout.minimumLineSpacing = 10.0
         layout.minimumInteritemSpacing = 10.0
-        let frame = CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        let viewHeight: CGFloat = UIScreen.main.bounds.size.height - ZFDemoViewController.Constants.titleBarHeight - ZFDemoViewController.Constants.tabViewHeight
+        let frame = CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: viewHeight)
         let collectionView = UICollectionView(frame: frame, collectionViewLayout: layout)
         return collectionView
     }()
@@ -37,17 +38,8 @@ class ZFCollectionDemoViewController: ZFMultiTabChildPageViewController {
         configSubviews()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.frame = view.bounds
-    }
-    
     deinit {
-        
+        print("ZFCollectionDemoViewController")
     }
     
     //MARK: - Public Mehtods

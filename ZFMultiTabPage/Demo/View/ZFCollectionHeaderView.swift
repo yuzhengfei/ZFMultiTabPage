@@ -10,9 +10,10 @@ import Foundation
 
 class ZFCollectionHeaderView: UIView {
     
-    private lazy var bgView: UIView = {
-        var bgView = UIView()
-        bgView.backgroundColor = .red
+    private lazy var bgView: UIImageView = {
+        var bgView = UIImageView()
+        bgView.image = UIImage(named: "header_bg")
+        bgView.contentMode = .scaleToFill
         return bgView
     }()
     

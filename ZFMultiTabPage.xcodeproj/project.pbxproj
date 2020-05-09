@@ -36,6 +36,7 @@
 		8BC4969424657C3800D57EC7 /* ZFMultipleTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC4969324657C3800D57EC7 /* ZFMultipleTabView.swift */; };
 		8BEB07C2246666AB00F83ED1 /* UIView+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEB07C1246666AB00F83ED1 /* UIView+Utility.swift */; };
 		8BEB07C42466671900F83ED1 /* String+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEB07C32466671900F83ED1 /* String+Utility.swift */; };
+		8BEB07C624669D1800F83ED1 /* ZFTitleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEB07C524669D1800F83ED1 /* ZFTitleBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +108,7 @@
 		8BC4969324657C3800D57EC7 /* ZFMultipleTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZFMultipleTabView.swift; sourceTree = "<group>"; };
 		8BEB07C1246666AB00F83ED1 /* UIView+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Utility.swift"; sourceTree = "<group>"; };
 		8BEB07C32466671900F83ED1 /* String+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Utility.swift"; sourceTree = "<group>"; };
+		8BEB07C524669D1800F83ED1 /* ZFTitleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZFTitleBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 				8BEB07BF2466634100F83ED1 /* Utility */,
 				8BC4968C246577B100D57EC7 /* Tab */,
 				8BC4964A2464201E00D57EC7 /* MainPage */,
+				8BEB07C724669D1F00F83ED1 /* Title */,
 				8BC496492464201100D57EC7 /* Demo */,
 				8BC496172464009A00D57EC7 /* AppDelegate.swift */,
 				8BC4968A24655F5800D57EC7 /* SceneDelegate.swift */,
@@ -278,8 +281,8 @@
 		8BC4967F2465066700D57EC7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				8BC496822465082000D57EC7 /* ZFCollectionDemoViewController.swift */,
 				8BC496862465537900D57EC7 /* ZFDemoViewController.swift */,
+				8BC496822465082000D57EC7 /* ZFCollectionDemoViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -309,6 +312,14 @@
 				8BEB07C32466671900F83ED1 /* String+Utility.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		8BEB07C724669D1F00F83ED1 /* Title */ = {
+			isa = PBXGroup;
+			children = (
+				8BEB07C524669D1800F83ED1 /* ZFTitleBar.swift */,
+			);
+			path = Title;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -463,6 +474,7 @@
 				8BEB07C2246666AB00F83ED1 /* UIView+Utility.swift in Sources */,
 				8BC4967A246503A600D57EC7 /* ZFCommonTabItemCell.swift in Sources */,
 				8BC4966C2464270C00D57EC7 /* MASViewConstraint.m in Sources */,
+				8BEB07C624669D1800F83ED1 /* ZFTitleBar.swift in Sources */,
 				8BEB07C42466671900F83ED1 /* String+Utility.swift in Sources */,
 				8BC496852465361600D57EC7 /* ZFColloectionDemoItemCell.swift in Sources */,
 				8BC4967B246503A600D57EC7 /* ZFCommonTabScrollView.swift in Sources */,
