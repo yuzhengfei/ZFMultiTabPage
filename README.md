@@ -8,6 +8,7 @@ ZFMultiTabPage框架是采用Swift开发的多Tab框架，实现了：
 > - 加入Tab子视图的==缓存机制==，避免了框架向调用方重复索要
 > - 对视图滑动的多个回调事件进行了处理，并通过代理方法对面暴露，调用方可以在各种时机做相应的业务处理，例如预加载等等   
 > - 解决了左滑退出手势冲突的问题
+> - 加入了UIScrollView嵌套滑动手势互斥机制，优化了滑动体验
 
 #### 1.主框架：ZFMultiTabPageViewController.swift 
 文件路径：ZFMultiTabPage/MainPage/Controller  
