@@ -169,6 +169,21 @@ class ZFMultiTabPageViewController: UIViewController {
         }
     }
     
+    // 此方法是为了防止框架使用方（父view）的frame有改变时本view的frame无法同步改变
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        mainScrollView.frame = view.bounds
+        mainScrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - self.offsetHeight)
+        mainScrollView.contentSize = CGSize(width: 0, height: mainScrollView.frame.height + headerView.frame.height)
+        tabView.frame.origin.y = headerView.frame.maxY
+        collectionView.frame.origin.y = tabView.frame.maxY
+        collectionView.frame.size = CGSize(width: view.frame.width, height: mainScrollView.contentSize.height - tabView.frame.maxY)
+        if self.isHiddenHeaderView {
+            mainScrollView.contentOffset = CGPoint(x: 0, y: headerView.frame.height - titleBarHeight)
+            self.isHiddenHeaderView = false
+        }
+    }
+    
     private func configViews() {
         view.addSubview(mainScrollView)
         mainScrollView.addSubview(headerView)
@@ -180,10 +195,6 @@ class ZFMultiTabPageViewController: UIViewController {
         tabView.frame.origin.y = headerView.frame.maxY
         collectionView.frame.origin.y = tabView.frame.maxY
         collectionView.frame.size = CGSize(width: view.frame.width, height: mainScrollView.contentSize.height - tabView.frame.maxY)
-        if self.isHiddenHeaderView {
-            mainScrollView.contentOffset = CGPoint(x: 0, y: headerView.frame.height - titleBarHeight)
-            self.isHiddenHeaderView = false
-        }
     }
 
     // 预取，暂定预取前1和后1
@@ -273,16 +284,20 @@ extension ZFMultiTabPageViewController: ZFMultiTabChildPageDelegate {
 extension ZFMultiTabPageViewController: UIScrollViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        mainScrollView.isScrollEnabled = true
+        collectionView.isScrollEnabled = true
         self.mIsClickTitle = false
         self.startOffsetX = scrollView.contentOffset.x
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         mainScrollView.isScrollEnabled = true
+        collectionView.isScrollEnabled = true
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         mainScrollView.isScrollEnabled = true
+        collectionView.isScrollEnabled = true
         currentIndex = collectionView.indexPathsForVisibleItems.first?.row ?? 0
         if scrollView == collectionView {
             delegate?.multiTabPageViewController(self, pageScrollViewDidEndDecelerating: scrollView)
@@ -291,6 +306,7 @@ extension ZFMultiTabPageViewController: UIScrollViewDelegate {
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         mainScrollView.isScrollEnabled = true
+        collectionView.isScrollEnabled = true
         if scrollView == collectionView {
             delegate?.multiTabPageViewController(self, pageScrolllViewDidEndScrollingAnimation: scrollView)
         }
@@ -299,6 +315,7 @@ extension ZFMultiTabPageViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == mainScrollView {
             mainScrollView.isScrollEnabled = true
+            collectionView.isScrollEnabled = false
             if currentIndex < tabCount {
                 if let child = childVCDic[currentIndex] {
                     if child.offsetY > 0 || scrollView.contentOffset.y >= headerView.frame.height - titleBarHeight {
@@ -312,6 +329,8 @@ extension ZFMultiTabPageViewController: UIScrollViewDelegate {
             }
             delegate?.multiTabPageViewController(self, mainScrollViewDidScroll: mainScrollView)
         } else if scrollView == collectionView {
+            mainScrollView.isScrollEnabled = false
+            collectionView.isScrollEnabled = true
             if !mIsClickTitle {
                 delegate?.multiTabPageViewController(self, pageScrollViewDidScroll: scrollView)
             }
