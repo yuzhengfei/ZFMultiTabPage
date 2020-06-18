@@ -138,6 +138,8 @@ class ZFMultiTabPageViewController: UIViewController {
         collectionView.scrollToItem(at: IndexPath.init(row: to, section: 0), at: .centeredHorizontally, animated: false)
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
             self.view.isUserInteractionEnabled = true
+            self.mainScrollView.isScrollEnabled = true
+            self.collectionView.isScrollEnabled = true
         }
     }
     
