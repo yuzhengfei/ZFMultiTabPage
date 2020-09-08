@@ -15,6 +15,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         configMainVC()
+        
+        // DEBUG环境加入动态调试工具injectioniii
+        // injectioniii的使用见文档：https://blog.csdn.net/yuzhengfei7/article/details/107006368
+        #if DEBUG
+        Bundle.init(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
+        #endif
         return true
     }
 

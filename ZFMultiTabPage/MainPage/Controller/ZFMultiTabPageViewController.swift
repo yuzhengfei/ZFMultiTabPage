@@ -15,7 +15,7 @@ import Foundation
     func multiTabPageViewController(_ viewController: ZFMultiTabPageViewController, pageScrolllViewDidEndScrollingAnimation scrollView: UIScrollView)
     // mainScrollView 滑动
     func multiTabPageViewController(_ viewController: ZFMultiTabPageViewController, mainScrollViewDidScroll scrollView: UIScrollView)
-    // 向外部要tab child vc
+    // 向外部索要 tab child vc
     func multiTabPageViewController(_ viewController: ZFMultiTabPageViewController, childViewController index: Int) -> ZFMultiTabChildPageViewController?
     // 子列表将要显示
     @objc optional func multiTabPageViewController(_ viewController: ZFMultiTabPageViewController, willDisplay index: Int)
@@ -67,9 +67,58 @@ class ZFMultiTabPageViewController: UIViewController {
     private var childVCDic: [Int: ZFMultiTabChildPageViewController] = [:]
     // 判断是否点击title来滚动页面
     private var mIsClickTitle: Bool = false
-    // 页面的高度偏移量
-    private var offsetHeight: CGFloat = 0
     
+    // MARK: - Public Property
+    var isHeaderViewHidden: Bool = false {
+        didSet {
+            if isHeaderViewHidden {
+                mainScrollView.contentOffset = CGPoint(x: 0, y: headerView.frame.height - titleBarHeight)
+            }
+        }
+    }
+    
+    var isBounces: Bool = false {
+        didSet {
+            self.mainScrollView.bounces = isBounces
+        }
+    }
+    
+    // 是否吸顶，并不允许垂直滑动
+    var isCeiling: Bool = false {
+        didSet {
+            if isCeiling {
+                mainScrollView.contentOffset = CGPoint(x: 0, y: headerView.frame.height - titleBarHeight)
+            } else {
+                mainScrollView.contentOffset = CGPoint(x: 0, y: 0)
+            }
+            mainScrollView.isScrollEnabled = !isCeiling
+        }
+    }
+    
+    // 是否允许横向滑动
+    var isHorizontalScrollEnable: Bool = true {
+        didSet {
+            self.collectionView.isScrollEnabled = isHorizontalScrollEnable
+        }
+    }
+    
+    // 是否允许垂直滑动滑动
+    var isVerticalScrollEnable: Bool = true {
+        didSet {
+            self.mainScrollView.isScrollEnabled = isVerticalScrollEnable
+        }
+    }
+    
+    // 是否需要重新布局
+    var needRelayout: Bool = false {
+        didSet {
+            if (needRelayout) {
+                self.view.setNeedsLayout()
+            }
+        }
+    }
+    
+    // MARK: - Public Methods
     /// 初始化方法
     /// - Parameters:
     ///   - tabCount: tab数量
@@ -93,8 +142,7 @@ class ZFMultiTabPageViewController: UIViewController {
     ///   - titleBarHeight: titleBar的高度
     ///   - defaultIndex: 可选参数，默认显示的子tab的索引，默认显示第一个
     ///   - isHiddenHeaderView: 可选参数，是否隐藏头部视图，默认显示
-    ///   - offsetHeight: 可选参数，主视图的偏移量，默认 = 0
-    init(tabCount: Int, headerView: UIView, tabView: UIView, titleBarHeight: CGFloat, defaultIndex: Int = 0, isHiddenHeaderView: Bool = false, offsetHeight: CGFloat = 0) {
+    init(tabCount: Int, headerView: UIView, tabView: UIView, titleBarHeight: CGFloat, defaultIndex: Int = 0, isHiddenHeaderView: Bool = false) {
         super.init(nibName: nil, bundle: nil)
         self.tabCount = tabCount
         self.headerView = headerView
@@ -104,34 +152,27 @@ class ZFMultiTabPageViewController: UIViewController {
             self.currentIndex = defaultIndex
         }
         self.isHiddenHeaderView = isHiddenHeaderView
-        self.offsetHeight = offsetHeight
     }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    var isHeaderViewHidden: Bool = false {
-        didSet {
-            if isHeaderViewHidden {
-                mainScrollView.contentOffset = CGPoint(x: 0, y: headerView.frame.height - titleBarHeight)
-            }
-        }
-    }
-    
-    var isHorizontalScrollEnable: Bool = true {
-        didSet {
-            self.collectionView.isScrollEnabled = isHorizontalScrollEnable
-        }
-    }
-    
-    var isBounces: Bool = false {
-        didSet {
-            self.mainScrollView.bounces = isBounces
+    // 处理右滑退出手势冲突问题
+    func handlePopGestureRecognizer(navi: UINavigationController) {
+        if let popGestureRecognizer = navi.interactivePopGestureRecognizer {
+            collectionView.panGestureRecognizer.require(toFail: popGestureRecognizer)
         }
     }
 
-    public func move(to: Int, animated: Bool) {
+    func resetChildViewControllers(tabCount: Int) {
+        // 清空原来的父控制器
+        childVCDic.forEach { (dic: (key: Int, value: ZFMultiTabChildPageViewController)) in
+            dic.value.removeFromParent()
+        }
+        mainScrollView.scrollViewWhites?.removeAll()
+        self.childVCDic.removeAll()
+        self.tabCount = tabCount
+        self.collectionView.reloadData()
+    }
+    
+    func move(to: Int, animated: Bool) {
         self.currentIndex = to
         mIsClickTitle = true
         view.isUserInteractionEnabled = false
@@ -143,22 +184,8 @@ class ZFMultiTabPageViewController: UIViewController {
         }
     }
     
-    // 处理右滑退出手势冲突问题
-    public func handlePopGestureRecognizer(navi: UINavigationController) {
-        if let popGestureRecognizer = navi.interactivePopGestureRecognizer {
-            collectionView.panGestureRecognizer.require(toFail: popGestureRecognizer)
-        }
-    }
-
-    public func resetChildViewControllers(tabCount: Int) {
-        // 清空原来的父控制器
-        childVCDic.forEach { (dic: (key: Int, value: ZFMultiTabChildPageViewController)) in
-            dic.value.removeFromParent()
-        }
-        mainScrollView.scrollViewWhites?.removeAll()
-        self.childVCDic.removeAll()
-        self.tabCount = tabCount
-        self.collectionView.reloadData()
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 
     override func viewDidLoad() {
@@ -171,15 +198,30 @@ class ZFMultiTabPageViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !isVerticalScrollEnable {
+            isVerticalScrollEnable = true
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // 左滑退出过程中禁止页面内上下滑动
+        if isVerticalScrollEnable {
+            isVerticalScrollEnable = false
+        }
+    }
+    
     // 此方法是为了防止框架使用方（父view）的frame有改变时本view的frame无法同步改变
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         mainScrollView.frame = view.bounds
-        mainScrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - self.offsetHeight)
+        mainScrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         mainScrollView.contentSize = CGSize(width: 0, height: mainScrollView.frame.height + headerView.frame.height)
         tabView.frame.origin.y = headerView.frame.maxY
         collectionView.frame.origin.y = tabView.frame.maxY
-        collectionView.frame.size = CGSize(width: view.frame.width, height: mainScrollView.contentSize.height - tabView.frame.maxY)
+        collectionView.frame.size = CGSize(width: view.frame.width, height: mainScrollView.frame.height - titleBarHeight - tabView.frame.height)
         if self.isHiddenHeaderView {
             mainScrollView.contentOffset = CGPoint(x: 0, y: headerView.frame.height - titleBarHeight)
             self.isHiddenHeaderView = false
@@ -192,11 +234,11 @@ class ZFMultiTabPageViewController: UIViewController {
         mainScrollView.addSubview(tabView)
         mainScrollView.addSubview(collectionView)
         mainScrollView.frame = view.bounds
-        mainScrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - self.offsetHeight)
+        mainScrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         mainScrollView.contentSize = CGSize(width: 0, height: mainScrollView.frame.height + headerView.frame.height)
         tabView.frame.origin.y = headerView.frame.maxY
         collectionView.frame.origin.y = tabView.frame.maxY
-        collectionView.frame.size = CGSize(width: view.frame.width, height: mainScrollView.contentSize.height - tabView.frame.maxY)
+        collectionView.frame.size = CGSize(width: view.frame.width, height: mainScrollView.frame.height - titleBarHeight - tabView.frame.height)
     }
 
     // 预取，暂定预取前1和后1

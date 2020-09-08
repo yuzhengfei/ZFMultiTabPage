@@ -1,5 +1,7 @@
 ### ZFMultiTabPage 组件介绍及使用方法
 
+[详见文档](https://blog.csdn.net/yuzhengfei7/article/details/106025090)
+
 ZFMultiTabPage框架是采用Swift开发的多Tab框架，实现了：  
 
 > - 可自定义头部视图(可控制显示与隐藏)  
